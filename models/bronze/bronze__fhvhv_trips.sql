@@ -1,0 +1,1 @@
+SELECT * FROM {{ source('bronze', 'fhvhv_trips') }}
