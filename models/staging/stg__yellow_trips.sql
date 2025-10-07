@@ -3,6 +3,14 @@
 
 
 SELECT 
+    {{ dbt_utils.generate_surrogate_key([
+      "'yellow'",                         
+      'to_varchar(tpep_pickup_datetime)',
+      'to_varchar(tpep_dropoff_datetime)',
+      'pu_location_id',
+      'do_location_id',
+      'trip_distance',
+    ]) }} as trip_id,
     'yellow_taxi' AS taxi_service,
     ABS(fare_amount) AS base_fare,
     ABS(total_amount) AS total_amount,

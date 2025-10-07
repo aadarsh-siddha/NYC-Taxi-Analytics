@@ -3,7 +3,15 @@
 
 
 
-SELECT 
+SELECT
+    {{ dbt_utils.generate_surrogate_key([
+      'hvfhs_license_num',                         
+      'to_varchar(pickup_datetime)',
+      'to_varchar(dropoff_datetime)',
+      'pu_location_id',
+      'do_location_id',
+      'trip_distance',
+    ]) }} as trip_id,
     CASE 
         WHEN hvfhs_license_num = 'HV0002' THEN 'juno'
         WHEN hvfhs_license_num = 'HV0003' THEN 'uber'
