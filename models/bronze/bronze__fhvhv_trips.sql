@@ -1,3 +1,8 @@
+{% set start_year = var('start_year', 2024) %}
+{% set end_year_exclusive = var('end_year_exclusive', 2026) %}
+
+
+
 SELECT 
     CASE 
         WHEN hvfhs_license_num = 'HV0002' THEN 'juno'
@@ -5,10 +10,10 @@ SELECT
         WHEN hvfhs_license_num = 'HV0004' THEN 'via'
         WHEN hvfhs_license_num = 'HV0005' THEN 'lyft'
     END AS taxi_service,
-    base_passenger_fare AS base_fare,
-    (base_passenger_fare + bcf + sales_tax + congestion_surcharge + airport_fee + tolls + driver_pay + tips)AS total_amount,
-    tips AS tip_amount,
-    congestion_surcharge,                   
+    ABS(base_passenger_fare) AS base_fare,
+    (ABS(base_passenger_fare) + ABS(bcf) + ABS(sales_tax) + ABS(congestion_surcharge) + ABS(airport_fee) + ABS(tolls) + ABS(driver_pay) + ABS(tips))AS total_amount,
+    ABS(tips) AS tip_amount,
+    ABS(congestion_surcharge) AS congestion_surcharge,                   
     pu_location_id,         
     do_location_id,
     pickup_datetime,       
@@ -23,11 +28,11 @@ SELECT
     on_scene_datetime,     
 
                  
-    bcf,                   
-    sales_tax,             
-    airport_fee,            
-    tolls,                 
-    driver_pay,             
+    ABS(bcf) AS bcf,                   
+    ABS(sales_tax) AS sales_tax,             
+    ABS(airport_fee) AS airport_fee,            
+    ABS(tolls) AS tolls,                 
+    ABS(driver_pay) AS driver_pay,             
 
 
     access_a_ride_flag,     
@@ -37,6 +42,13 @@ SELECT
     wav_match_flag         
 
 FROM {{ source('bronze', 'fhvhv_trips') }}
+WHERE
+    pickup_datetime  >= to_timestamp_ntz('{{ start_year }}-01-01')
+    and pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+    and dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
+    and dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+
+
 
 {% if target.name == 'dev' %}
 limit 1000000
