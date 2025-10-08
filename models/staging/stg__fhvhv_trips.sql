@@ -10,7 +10,7 @@ SELECT
       'to_varchar(dropoff_datetime)',
       'pu_location_id',
       'do_location_id',
-      'trip_distance',
+      'trip_miles',
     ]) }} as trip_id,
     CASE 
         WHEN hvfhs_license_num = 'HV0002' THEN 'juno'

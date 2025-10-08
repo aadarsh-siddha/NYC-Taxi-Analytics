@@ -38,10 +38,10 @@ SELECT
 
 FROM {{ source('bronze', 'green_trips') }}
 WHERE
-    tpep_pickup_datetime  >= to_timestamp_ntz('{{ start_year }}-01-01')
-    and tpep_pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
-    and tpep_dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
-    and tpep_dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+    lpep_pickup_datetime  >= to_timestamp_ntz('{{ start_year }}-01-01')
+    and lpep_pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+    and lpep_dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
+    and lpep_dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
 
 
 {% if target.name == 'dev' %}
