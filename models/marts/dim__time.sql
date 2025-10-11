@@ -1,6 +1,3 @@
-{% set start_time = "to_time('00:00:00')" %}
-{% set end_time   = "to_time('24:00:00')" %}
-
 -- generate one second per day
 WITH spine AS (
   {{ dbt_utils.date_spine(
