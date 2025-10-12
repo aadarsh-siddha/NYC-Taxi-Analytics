@@ -1,0 +1,8 @@
+sources:
+  - name: bronze
+    database: nyc_taxi_analytics  
+    schema: bronze  
+    tables:
+      - name: yellow_trips
+      - name: green_trips
+      - name: fhvhv_trips

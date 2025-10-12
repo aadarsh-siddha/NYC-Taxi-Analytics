@@ -1,0 +1,138 @@
+version: 2
+
+models:
+  - name: stg__yellow_trips
+    columns:
+      - name: trip_id
+        tests:
+          - unique
+      - name: taxi_service
+      - name: base_fare
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
+      - name: tip_amount
+        tests:
+          - not_null
+      - name: congestion_surcharge
+      - name: pu_location_id
+        tests:
+          - not_null
+      - name: do_location_id
+        tests:
+          - not_null
+      - name: pickup_datetime
+        tests:
+          - not_null
+      - name: dropoff_datetime
+        tests:
+          - not_null
+      - name: trip_distance
+        tests:
+          - not_null
+      - name: trip_time
+        tests:
+          - not_null
+      - name: vendor_id
+      - name: ratecode_id
+      - name: passenger_count
+      - name: payment_type
+      - name: extra
+      - name: mta_tax
+      - name: tolls_amount
+      - name: improvement_surcharge
+      - name: trip_type
+      - name: store_and_fwd_flag
+  - name: stg__green_trips
+    columns:
+      - name: trip_id
+        tests:
+          - unique
+      - name: taxi_service
+      - name: base_fare
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
+      - name: tip_amount
+        tests:
+          - not_null
+      - name: congestion_surcharge
+      - name: pu_location_id
+        tests:
+          - not_null
+      - name: do_location_id
+        tests:
+          - not_null
+      - name: pickup_datetime
+        tests:
+          - not_null
+      - name: dropoff_datetime
+        tests:
+          - not_null
+      - name: trip_distance
+        tests:
+          - not_null
+      - name: trip_time
+        tests:
+          - not_null
+      - name: vendor_id
+      - name: ratecode_id
+      - name: passenger_count
+      - name: payment_type
+      - name: extra
+      - name: mta_tax
+      - name: tolls_amount
+      - name: improvement_surcharge
+      - name: airport_fee
+      - name: store_and_fwd_flag
+  - name: stg__fhvhv_trips
+    columns:
+      - name: trip_id
+        tests:
+          - unique
+      - name: base_fare
+        tests:
+          - not_null
+      - name: total_amount
+        tests:
+          - not_null
+      - name: tip_amount
+        tests:
+          - not_null
+      - name: congestion_surcharge
+      - name: pu_location_id
+        tests:
+          - not_null
+      - name: do_location_id
+        tests:
+          - not_null
+      - name: pickup_datetime
+        tests:
+          - not_null
+      - name: dropoff_datetime
+        tests:
+          - not_null
+      - name: trip_distance
+        tests:
+          - not_null
+      - name: trip_time
+        tests:
+          - not_null
+      - name: dispatching_base_num
+      - name: originating_base_num   
+      - name: request_datetime     
+      - name: on_scene_datetime     
+      - name: bcf                   
+      - name: sales_tax             
+      - name: airport_fee            
+      - name: tolls                 
+      - name: driver_pay             
+      - name: access_a_ride_flag     
+      - name: shared_request_flag    
+      - name: shared_match_flag     
+      - name: wav_request_flag       
+      - name: wav_match_flag   
