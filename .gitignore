@@ -212,3 +212,8 @@ target/
 dbt_packages/
 logs/
 # end dbt Cloud content
+dbt/keys/
+dbt/dbt_internal_packages
+.gitignore
+.DS_Store
+dbt/profiles.yml

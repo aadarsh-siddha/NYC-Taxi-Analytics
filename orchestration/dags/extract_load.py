@@ -12,7 +12,7 @@ from airflow.providers.amazon.aws.transfers.http_to_s3 import HttpToS3Operator
     catchup=False,
     tags=["extract", "load"],
     params = {
-        "taxi": Param("yellow", type="string", enum=["yellow", "green", "fhv"]),
+        "taxi": Param("green", type="string", enum=["yellow", "green", "fhvhv"]),
         "year": Param(2025, type="integer", minimum=2024, maximum=2025),
         "month": Param(1, type="integer", minimum=1, maximum=12),
         "download_dir": Param("/tmp/taxi_data")
@@ -40,10 +40,15 @@ def extract_load():
         http_conn_id="taxi_data_api",                 
         endpoint=f"/trip-data/{ taxi }_tripdata_{ year }-{ month }.parquet",
         s3_bucket="nyctaxianalytics",
-        s3_key=f"{ taxi }/{ taxi }_tripdata_{ year }-{ month }.parquet",
+        s3_key=f"{ taxi }/{ year }/{ month }/{ taxi }_tripdata_{ year }-{ month }.parquet",
         replace=True,
         aws_conn_id= "aws_default"
     )
+    
+    @task
+    def check_schema_for_upload():
+        s3_bucket="nyctaxianalytics",
+        s3_key=f"{ taxi }/{ year }/{ month }/{ taxi }_tripdata_{ year }-{ month }.parquet",
         
     check_endpoint >> uploadtoS3direct
 
