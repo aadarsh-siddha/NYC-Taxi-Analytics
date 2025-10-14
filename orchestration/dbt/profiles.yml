@@ -1,0 +1,26 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: WXDCXUY-CC64430
+      user: aasiddha28
+
+      # Keypair config
+      # For dbt Fusion engine, make sure to read requirements about using PKCS#8 format with AES-256 encryption in the following section.
+      private_key_path: ./keys/rsa_key.p8 
+      # or private_key instead of private_key_path {{ env_var('DBT_PRIVATE_KEY_PATH) }}  {{ env_var('DBT_PRIVATE_KEY_PATH) }}
+      private_key_passphrase: omii
+
+      database: NYC_TAXI_ANALYTICS
+      warehouse: COMPUTE_WH
+      schema: dbt_asiddha
+      threads: 4
+      client_session_keep_alive: False
+
+      # optional
+      connect_retries: 0 # default 0
+      connect_timeout: 10 # default: 10
+      retry_on_database_errors: True # default: true
+      retry_all: False  # default: false
+      reuse_connections: True # default: True if client_session_keep_alive is False, otherwise None    
