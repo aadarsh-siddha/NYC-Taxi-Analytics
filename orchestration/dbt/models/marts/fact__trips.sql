@@ -1,50 +1,22 @@
+{{ 
+    config(
+        materialized='incremental'
+    )
+}}
 WITH green_trips AS(
     SELECT 
-        trip_id,
-        taxi_service,
-        base_fare,
-        total_amount,
-        tip_amount,
-        congestion_surcharge,                   
-        pu_location_id,         
-        do_location_id,
-        pickup_datetime,       
-        dropoff_datetime,
-        trip_distance,
-        trip_time
-    FROM {{ ref('stg__green_trips') }}
+        *
+    FROM {{ ref('int__green_trips') }}
 ),
 yellow_trips AS (
     SELECT 
-        trip_id,
-        taxi_service,
-        base_fare,
-        total_amount,
-        tip_amount,
-        congestion_surcharge,                   
-        pu_location_id,         
-        do_location_id,
-        pickup_datetime,       
-        dropoff_datetime,
-        trip_distance,
-        trip_time
-    FROM {{ ref('stg__yellow_trips') }}
+        *
+    FROM {{ ref('int__yellow_trips') }}
 ),
 fhvhv_trips AS (
     SELECT 
-        trip_id,
-        taxi_service,
-        base_fare,
-        total_amount,
-        tip_amount,
-        congestion_surcharge,                   
-        pu_location_id,         
-        do_location_id,
-        pickup_datetime,       
-        dropoff_datetime,
-        trip_distance,
-        trip_time
-    FROM {{ ref('stg__fhvhv_trips') }}
+        *
+    FROM {{ ref('int__fhvhv_trips') }}
 ),
 date_dim AS (
     SELECT * FROM {{ ref('dim__date') }}
@@ -77,3 +49,6 @@ transformed2 AS
 
 
 SELECT * FROM transformed2
+{% if is_incremental() %}
+WHERE _etl_loaded_at >= (SELECT MAX(_etl_loaded_at) from {{ this }}) 
+{% endif %}

@@ -47,7 +47,8 @@ WITH fhvhv_trips AS
         shared_request_flag,    
         shared_match_flag,     
         wav_request_flag,       
-        wav_match_flag         
+        wav_match_flag,
+        current_timestamp() AS _etl_loaded_at         
 
     FROM {{ source('bronze', 'fhvhv_trips') }}
     WHERE
@@ -55,12 +56,6 @@ WITH fhvhv_trips AS
         and pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
         and dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
         and dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
-
-
-
-    {% if target.name == 'dev' %}
-    limit 1000000
-    {% endif %}
 ),
 deduplicated_fhvhv_trips AS
 (

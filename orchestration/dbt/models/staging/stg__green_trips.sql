@@ -35,7 +35,8 @@ WITH green_trips AS
         ABS(improvement_surcharge) AS improvement_surcharge,
 
         trip_type,
-        store_and_fwd_flag
+        store_and_fwd_flag,
+        current_timestamp() AS _etl_loaded_at    
 
     FROM {{ source('bronze', 'green_trips') }}
     WHERE
@@ -43,11 +44,6 @@ WITH green_trips AS
         and lpep_pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
         and lpep_dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
         and lpep_dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
-
-
-    {% if target.name == 'dev' %}
-    limit 1000000
-    {% endif %}
 ),
 deduplicated_green_trips AS (
   {{ dbt_utils.deduplicate(

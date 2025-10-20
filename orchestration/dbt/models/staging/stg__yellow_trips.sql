@@ -1,3 +1,9 @@
+{{ 
+    config(
+        materialization='incremental'
+    )
+}}
+
 {% set start_year = var('start_year', 2024) %}
 {% set end_year_exclusive = var('end_year_exclusive', 2026) %}
 
@@ -37,8 +43,8 @@ WITH yellow_trips AS
         ABS(improvement_surcharge) AS improvement_surcharge,
         ABS(airport_fee) AS airport_fee, 
 
-        store_and_fwd_flag,    
-
+        store_and_fwd_flag,
+        _etl_loaded_at
 
     FROM {{ source('bronze', 'yellow_trips') }}
 
@@ -47,9 +53,8 @@ WITH yellow_trips AS
         and tpep_pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
         and tpep_dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
         and tpep_dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
-
-    {% if target.name == 'dev' %}
-    limit 1000000
+    {% if is_incremental() %}
+        and _etl_loaded_at >= (SELECT MAX(_etl_loaded_at) from {{ this }}) 
     {% endif %}
 ),
 deduplicated_yellow_trips AS (

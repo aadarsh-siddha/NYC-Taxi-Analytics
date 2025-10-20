@@ -1,8 +1,10 @@
 import os
 from cosmos import ProjectConfig, ProfileConfig, ExecutionConfig, DbtDag
 from cosmos.profiles import SnowflakeEncryptedPrivateKeyFilePemProfileMapping
+from datetime import datetime
 
-DBT_PROJECT_PATH = "/opt/airflow/dbt"
+
+DBT_PROJECT_PATH = "/usr/local/airflow/dbt"
 DBT_EXECUTABLE_PATH = f"{os.getenv('AIRFLOW_HOME')}/dbt_venv/bin/dbt"
 
 _project_config = ProjectConfig(
@@ -27,7 +29,7 @@ _project_config = ProjectConfig(
 # )
 
 _profile_config = ProfileConfig(
-    profile_name="my_snowflake_profile",
+    profile_name="default",
     target_name="dev",
     profiles_yml_filepath=f"{DBT_PROJECT_PATH}/profiles.yml",
 )
@@ -42,7 +44,7 @@ my_dag = DbtDag(
     profile_config = _profile_config,
     execution_config = _execution_config,
     schedule = "@daily",
-    start_date = "2025-01-01",
+    start_date = datetime(2025, 1, 1),
     catchup = False,
     tags = ["dbt"]
 )
