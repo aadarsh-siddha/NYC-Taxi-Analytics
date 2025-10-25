@@ -1,6 +1,10 @@
 {% set start_year = var('start_year', 2024) %}
 {% set end_year_exclusive = var('end_year_exclusive', 2026) %}
-
+{{ 
+    config(
+        materialized='incremental'
+    )
+}}
 WITH green_trips AS 
 (
     SELECT 
@@ -36,7 +40,7 @@ WITH green_trips AS
 
         trip_type,
         store_and_fwd_flag,
-        current_timestamp() AS _etl_loaded_at    
+        _etl_loaded_at    
 
     FROM {{ source('bronze', 'green_trips') }}
     WHERE
@@ -44,6 +48,9 @@ WITH green_trips AS
         and lpep_pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
         and lpep_dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
         and lpep_dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+    {% if is_incremental() %}
+        and _etl_loaded_at >= (SELECT MAX(_etl_loaded_at) from {{ this }}) 
+    {% endif %}
 ),
 deduplicated_green_trips AS (
   {{ dbt_utils.deduplicate(

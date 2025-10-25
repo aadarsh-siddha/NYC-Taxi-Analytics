@@ -1,6 +1,10 @@
 {% set start_year = var('start_year', 2024) %}
 {% set end_year_exclusive = var('end_year_exclusive', 2026) %}
-
+{{ 
+    config(
+        materialized='incremental'
+    )
+}}
 WITH fhvhv_trips AS
 (
     SELECT
@@ -48,7 +52,7 @@ WITH fhvhv_trips AS
         shared_match_flag,     
         wav_request_flag,       
         wav_match_flag,
-        current_timestamp() AS _etl_loaded_at         
+        _etl_loaded_at         
 
     FROM {{ source('bronze', 'fhvhv_trips') }}
     WHERE
@@ -56,6 +60,9 @@ WITH fhvhv_trips AS
         and pickup_datetime  <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
         and dropoff_datetime >= to_timestamp_ntz('{{ start_year }}-01-01')
         and dropoff_datetime <  to_timestamp_ntz('{{ end_year_exclusive }}-01-01')
+    {% if is_incremental() %}
+        and _etl_loaded_at >= (SELECT MAX(_etl_loaded_at) from {{ this }}) 
+    {% endif %}
 ),
 deduplicated_fhvhv_trips AS
 (
